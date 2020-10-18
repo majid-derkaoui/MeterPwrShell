@@ -13,3 +13,7 @@ chmod +x meterpwrshell
 2. Metasploit Framework
 3. Internet Connection
 
+# Changelogs
+1. Add AMSI Bypass Techniques
+2. There Is Alot Tho,Try The Script By Your Self :)
+
