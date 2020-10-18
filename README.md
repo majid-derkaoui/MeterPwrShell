@@ -5,6 +5,9 @@ This Tool Is Powered By [Metasploit-Framework](https://github.com/rapid7/metaspl
 # Usage
 ```
 apt update
+apt-get install git
+git clone https://github.com/GetRektBoy724/MeterPwrShell.git
+cd MeterPwrShell
 chmod +x meterpwrshell
 ./meterpwrshell
 ```
