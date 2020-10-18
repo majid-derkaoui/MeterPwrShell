@@ -257,7 +257,7 @@ bannerrandomizer
 showbanner
 echo -e $okegreen "                [---] Tool Programmed By GetRektBoy724 [---]                 "
 echo -e $okegreen "                [---]      Codename : ILoveShell       [---]                 "
-echo -e $okegreen "                [---]        Version : v3.0.0 (beta)   [---]                 "
+echo -e $okegreen "                [---]        Version : v3.0.0          [---]                 "
 echo -e $okegreen "         [---] Follow Me At : https://github.com/GetRektBoy724 [---]         "
 echo -e $okegreen "                    [---] Session ID Number : $SESSIONID [---]                  "
 echo -e $okegreen " [-----------------------------------------------------------] "
