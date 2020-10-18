@@ -9,7 +9,7 @@ chmod +x meterpwrshell
 ./meterpwrshell
 ```
 # Requirements
-1. Kali Linux,Debian,Ubuntu
+1. Kali Linux,Debian,Or Ubuntu (If You Dont Have One Of Those,The Script Will Not Work
 2. Metasploit Framework
 3. Internet Connection
 
