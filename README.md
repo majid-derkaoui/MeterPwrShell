@@ -21,4 +21,5 @@ chmod +x meterpwrshell
 2. There Is Alot Tho,Try The Script By Your Self :)
 
 # Demonstration
-Coming Soon :)
+1. Part 1 : Making The P4yload = https://youtu.be/WmnmkouS3L4
+2. Part 2 : Testing The P4yload = Coming soon :)
